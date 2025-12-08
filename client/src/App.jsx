@@ -7,12 +7,16 @@ import {
 } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
+import Catalog from './pages/Catalog';
 import Login from './pages/Login';
 import AddRoom from './pages/AddRoom';
 import EditRoom from './pages/EditRoom';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
+import RoomDetails from './pages/RoomDetails';
+import Contacts from './pages/Contacts';
+import Reviews from './pages/Reviews';
+import Home from './pages/Home';
 
 function App() {
   return (
@@ -22,6 +26,10 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="/rooms/:id" element={<RoomDetails />} />
+            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/contacts" element={<Contacts />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/add-room" element={<AddRoom />} />

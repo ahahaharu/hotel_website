@@ -1,0 +1,60 @@
+.reviews-page {
+  padding: 40px 0;
+}
+.review-form-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border: 1px solid #ddd;
+}
+.rating-select {
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 200px;
+}
+.progress-container {
+  margin: 15px 0;
+  background: #eee;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-bar {
+  background: #27ae60;
+  height: 100%;
+  transition: width 0.2s;
+}
+.progress-container span {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  line-height: 20px;
+  color: #000;
+}
+.status-msg {
+  margin: 10px 0;
+  font-weight: bold;
+}
+.status-msg.success {
+  color: green;
+}
+.status-msg.error {
+  color: red;
+}
+.review-item {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  color: #555;
+}
+.review-rating {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}

@@ -26,7 +26,6 @@
   align-items: center;
 }
 
-/* Общий стиль для селектов и инпута */
 .filter-select,
 .search-input {
   padding: 10px 15px;

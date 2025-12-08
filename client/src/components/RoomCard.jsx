@@ -1,77 +1,61 @@
 import React, { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext'; // <--- Импорт контекста
+import { Link } from 'react-router-dom'; // Импорт Link
+import { AuthContext } from '../context/AuthContext';
 import './RoomCard.css';
-import { useNavigate } from 'react-router-dom';
 
 const RoomCard = ({ room, onBook, onDelete }) => {
-  // <--- Добавили onDelete
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const getBadgeColor = (level) => {
-    switch (level) {
-      case 'Люкс':
-        return '#D4AF37';
-      case 'Полулюкс':
-        return '#A0A0A0';
-      default:
-        return '#8B4513';
-    }
-  };
 
   return (
     <div className="room-card">
-      <div className="card-image">
-        <img src={room.photoUrl} alt={`Номер ${room.roomNumber}`} />
-        <span
-          className="comfort-badge"
-          style={{ backgroundColor: getBadgeColor(room.comfortLevel) }}
-        >
-          {room.comfortLevel}
-        </span>
-      </div>
+      <img
+        src={room.photoUrl}
+        alt={`Room ${room.roomNumber}`}
+        className="room-image"
+      />
+      <div className="room-info">
+        <h3>Комната {room.roomNumber}</h3>
+        <p className="room-type">{room.comfortLevel}</p>
+        <p className="room-price">{room.price} ₽ / ночь</p>
+        <p className="room-capacity">👥 {room.capacity} чел.</p>
 
-      <div className="card-content">
-        <div className="card-header">
-          <h3>Номер {room.roomNumber}</h3>
+        <div className="room-actions">
+          {/* Ссылка на детальную страницу */}
+          <Link
+            to={`/rooms/${room._id}`}
+            className="btn btn-secondary"
+            style={{
+              marginRight: '5px',
+              textDecoration: 'none',
+              fontSize: '0.9rem',
+            }}
+          >
+            Подробнее
+          </Link>
+
+          <button onClick={onBook} className="btn btn-primary">
+            Забронировать
+          </button>
 
           {user && user.role === 'admin' && (
-            <div style={{ display: 'flex', gap: '5px' }}>
-              <button
-                className="btn-icon edit"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/edit-room/${room._id}`);
-                }}
-                title="Редактировать"
+            <>
+              <Link
+                to={`/edit-room/${room._id}`}
+                className="btn btn-warning"
+                style={{ marginLeft: '5px' }}
               >
-                ✎
-              </button>
-
+                ✏️
+              </Link>
               <button
-                className="btn-icon delete"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(room._id);
-                }}
-                title="Удалить"
+                onClick={() => onDelete(room._id)}
+                className="btn btn-danger"
+                style={{ marginLeft: '5px' }}
               >
-                ✖
+                🗑️
               </button>
-            </div>
+            </>
           )}
         </div>
-
-        <p className="description">{room.description}</p>
-
-        <div className="card-details">
-          <span>👥 {room.capacity} чел.</span>
-          <span className="price">{room.price} ₽ / ночь</span>
-        </div>
-
-        <button className="btn btn-primary" onClick={onBook}>
-          Забронировать
-        </button>
       </div>
     </div>
   );

@@ -70,11 +70,18 @@ const Navbar = () => {
             </div>
             <div className="date-row">{formatDate(currentTime)}</div>
           </div>
-
           <Link to="/" className="nav-item">
+            Главная
+          </Link>
+          <Link to="/catalog" className="nav-item">
             Номера
           </Link>
-
+          <Link to="/reviews" className="nav-item">
+            Отзывы
+          </Link>
+          <Link to="/contacts" className="nav-item">
+            Контакты
+          </Link>
           {user && user.role === 'admin' && (
             <>
               <Link to="/add-room" className="nav-item">
@@ -89,7 +96,6 @@ const Navbar = () => {
               </Link>
             </>
           )}
-
           {user ? (
             <div className="user-controls">
               <div className="user-info">
