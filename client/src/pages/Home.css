@@ -1,0 +1,37 @@
+.hero-section {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.hero-section h1 {
+  font-size: 2.5rem;
+  color: var(--accent-dark);
+  margin-bottom: 10px;
+}
+
+.filter-panel {
+  margin-top: 20px;
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  padding-bottom: 50px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-top: 50px;
+}

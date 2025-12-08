@@ -115,6 +115,14 @@ const seedDB = async () => {
     });
     console.log('👤 Администратор создан (login: admin, pass: admin123)');
 
+    const clientPassword = await bcrypt.hash('client123', salt);
+    await User.create({
+      username: 'client',
+      password: clientPassword,
+      role: 'guest',
+    });
+    console.log('👤 Клиент создан (login: client, pass: client123)');
+
     const createdRooms = await Room.insertMany(roomsData);
     console.log(`🏨 Добавлено ${createdRooms.length} номеров`);
 
