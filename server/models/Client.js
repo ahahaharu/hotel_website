@@ -2,6 +2,13 @@ const mongoose = require('mongoose');
 
 const ClientSchema = new mongoose.Schema(
   {
+    // Связь с аккаунтом (может быть null, если бронирует менеджер для человека с улицы)
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      unique: true, // У одного юзера только одна анкета клиента
+      sparse: true, // Позволяет иметь много клиентов БЕЗ юзера (null)
+    },
     lastName: {
       type: String,
       required: [true, 'Фамилия обязательна'],
@@ -16,18 +23,19 @@ const ClientSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    // Паспорт обязателен и уникален
     passportData: {
       type: String,
-      required: true,
+      required: [true, 'Паспортные данные обязательны'],
       unique: true,
-    },
-    comment: {
-      type: String,
-      default: '',
     },
     contactInfo: {
       type: String,
       required: true,
+    },
+    comment: {
+      type: String,
+      default: '',
     },
   },
   { timestamps: true }

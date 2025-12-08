@@ -4,17 +4,19 @@ import { AuthContext } from '../context/AuthContext';
 import './Login.css';
 import { GoogleLogin } from '@react-oauth/google';
 
-const Login = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '', // Это будет отображаемое имя (Иван)
+    email: '', // Это будет логин
     password: '',
+    confirmPassword: '',
   });
   const [error, setError] = useState('');
 
-  const { login, googleLogin } = useContext(AuthContext);
+  const { register, googleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { email, password } = formData;
+  const { username, email, password, confirmPassword } = formData;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +26,18 @@ const Login = () => {
     e.preventDefault();
     setError('');
 
-    const result = await login(email, password);
+    if (password !== confirmPassword) {
+      setError('Пароли не совпадают');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Пароль должен быть не менее 6 символов');
+      return;
+    }
+
+    // Передаем username, email, password
+    const result = await register(username, email, password);
 
     if (result.success) {
       navigate('/');
@@ -33,6 +46,7 @@ const Login = () => {
     }
   };
 
+  // Добавляем Google и сюда тоже, чтобы можно было сразу зарегаться через него
   const handleGoogleSuccess = async (credentialResponse) => {
     if (credentialResponse.credential) {
       const result = await googleLogin(credentialResponse.credential);
@@ -44,17 +58,25 @@ const Login = () => {
     }
   };
 
-  const handleGoogleError = () => {
-    setError('Ошибка входа через Google');
-  };
-
   return (
     <div className="login-page container">
       <div className="login-card">
-        <h2>Вход в систему</h2>
-        <p>Добро пожаловать</p>
+        <h2>Регистрация</h2>
+        <p>Создайте новый аккаунт</p>
 
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Имя пользователя</label>
+            <input
+              type="text"
+              name="username"
+              value={username}
+              onChange={handleChange}
+              required
+              placeholder="Иван Иванов"
+            />
+          </div>
+
           <div className="form-group">
             <label>Email</label>
             <input
@@ -75,14 +97,26 @@ const Login = () => {
               value={password}
               onChange={handleChange}
               required
-              placeholder="Введите пароль"
+              placeholder="Придумайте пароль"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Подтвердите пароль</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={handleChange}
+              required
+              placeholder="Повторите пароль"
             />
           </div>
 
           {error && <div className="error-msg">{error}</div>}
 
           <button type="submit" className="btn btn-primary btn-block">
-            Войти
+            Зарегистрироваться
           </button>
         </form>
 
@@ -93,17 +127,17 @@ const Login = () => {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
+            onError={() => setError('Ошибка регистрации через Google')}
             size="large"
             width="300"
-            text="signin_with"
+            text="signup_with" // Текст кнопки изменится на "Sign up with Google"
             shape="rectangular"
           />
         </div>
 
         <div style={{ marginTop: '15px', textAlign: 'center' }}>
           <p>
-            Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
+            Уже есть аккаунт? <Link to="/login">Войти</Link>
           </p>
         </div>
       </div>
@@ -111,4 +145,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
