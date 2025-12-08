@@ -25,14 +25,26 @@ const RoomSchema = new mongoose.Schema(
     },
     description: {
       type: String,
+      default: '',
     },
-    photoUrl: {
+    photo: {
       type: String,
-      default:
-        'https://via.assets.so/img.jpg?w=400&h=300&bg=e5e7eb&text=No+photo&f=png',
+      default: null,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+RoomSchema.virtual('photoUrl').get(function () {
+  if (this.photo) {
+    const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+    return `${baseUrl}/uploads/${this.photo}`;
+  }
+  return 'https://via.assets.so/img.jpg?w=400&h=300&bg=e5e7eb&text=No+photo&f=png';
+});
 
 module.exports = mongoose.model('Room', RoomSchema);

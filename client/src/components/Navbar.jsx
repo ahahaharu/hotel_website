@@ -16,7 +16,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="container navbar-content">
         <Link to="/" className="logo">
-          Grand Hotel ⭐️⭐️⭐️⭐️⭐️
+          Grand Hotel
         </Link>
         <div className="nav-links">
           <Link to="/">Номера</Link>
@@ -24,7 +24,12 @@ const Navbar = () => {
           {user ? (
             <>
               <span className="user-badge">
-                👤 {user.role === 'admin' ? 'Администратор' : 'Менеджер'}
+                👤{' '}
+                {user.role === 'admin'
+                  ? 'Администратор'
+                  : user.role === 'manager'
+                  ? 'Менеджер'
+                  : 'Гость'}
               </span>
               <button onClick={handleLogout} className="btn-link">
                 Выйти

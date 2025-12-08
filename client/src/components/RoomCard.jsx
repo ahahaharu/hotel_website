@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext'; // <--- Импорт контекста
 import './RoomCard.css';
+import { useNavigate } from 'react-router-dom';
 
-const RoomCard = ({ room, onBook }) => {
+const RoomCard = ({ room, onBook, onDelete }) => {
+  // <--- Добавили onDelete
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const getBadgeColor = (level) => {
     switch (level) {
       case 'Люкс':
@@ -26,7 +32,36 @@ const RoomCard = ({ room, onBook }) => {
       </div>
 
       <div className="card-content">
-        <h3>Номер {room.roomNumber}</h3>
+        <div className="card-header">
+          <h3>Номер {room.roomNumber}</h3>
+
+          {user && user.role === 'admin' && (
+            <div style={{ display: 'flex', gap: '5px' }}>
+              <button
+                className="btn-icon edit"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/edit-room/${room._id}`);
+                }}
+                title="Редактировать"
+              >
+                ✎
+              </button>
+
+              <button
+                className="btn-icon delete"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(room._id);
+                }}
+                title="Удалить"
+              >
+                ✖
+              </button>
+            </div>
+          )}
+        </div>
+
         <p className="description">{room.description}</p>
 
         <div className="card-details">
@@ -34,7 +69,7 @@ const RoomCard = ({ room, onBook }) => {
           <span className="price">{room.price} ₽ / ночь</span>
         </div>
 
-        <button className="btn btn-primary" onClick={() => onBook(room._id)}>
+        <button className="btn btn-primary" onClick={onBook}>
           Забронировать
         </button>
       </div>

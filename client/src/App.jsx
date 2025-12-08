@@ -4,6 +4,8 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import AddRoom from './pages/AddRoom';
+import EditRoom from './pages/EditRoom';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/add-room" element={<AddRoom />} />
+            <Route path="/edit-room/:id" element={<EditRoom />} />
           </Routes>
         </div>
       </Router>

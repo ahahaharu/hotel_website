@@ -67,3 +67,38 @@
   color: var(--primary-gold);
   font-size: 1.1rem;
 }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.btn-icon {
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: white;
+}
+
+.btn-icon.delete {
+  background: #e74c3c;
+}
+.btn-icon.delete:hover {
+  background: #c0392b;
+}
+
+.btn-icon.edit {
+  background: #f1c40f; /* Желтый/Золотой */
+  color: #333;
+}
+.btn-icon.edit:hover {
+  background: #d4ac0d;
+}
