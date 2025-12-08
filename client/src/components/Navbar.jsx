@@ -82,10 +82,11 @@ const Navbar = () => {
           <Link to="/contacts" className="nav-item">
             Контакты
           </Link>
+
           {user && user.role === 'admin' && (
             <>
-              <Link to="/add-room" className="nav-item">
-                + Добавить номер
+              <Link to="/reception" className="nav-item">
+                🛎️ Стойка регистрации
               </Link>
               <Link
                 to="/admin"

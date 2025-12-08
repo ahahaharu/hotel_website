@@ -17,6 +17,7 @@ import RoomDetails from './pages/RoomDetails';
 import Contacts from './pages/Contacts';
 import Reviews from './pages/Reviews';
 import Home from './pages/Home';
+import Reception from './pages/Reception';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/add-room" element={<AddRoom />} />
             <Route path="/edit-room/:id" element={<EditRoom />} />
+            <Route path="/reception" element={<Reception />} />
             <Route
               path="/admin"
               element={
