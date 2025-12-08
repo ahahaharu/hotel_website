@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Navbar.css';
@@ -6,6 +6,21 @@ import './Navbar.css';
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Состояние для часов
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Определяем таймзону один раз при загрузке
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  useEffect(() => {
+    // Тикаем каждую секунду
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -23,6 +38,23 @@ const Navbar = () => {
     }
   };
 
+  // Форматирование времени (HH:mm)
+  const formatTime = (date) => {
+    return new Intl.DateTimeFormat('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date);
+  };
+
+  // Форматирование даты (DD.MM.YYYY)
+  const formatDate = (date) => {
+    return new Intl.DateTimeFormat('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date);
+  };
+
   return (
     <nav className="navbar">
       <div className="container navbar-content">
@@ -31,34 +63,38 @@ const Navbar = () => {
         </Link>
 
         <div className="nav-links">
+          <div className="time-widget">
+            <div className="time-row">
+              <span className="current-time">{formatTime(currentTime)}</span>
+              <span className="current-timezone">{userTimeZone}</span>
+            </div>
+            <div className="date-row">{formatDate(currentTime)}</div>
+          </div>
+
           <Link to="/" className="nav-item">
             Номера
           </Link>
 
           {user && user.role === 'admin' && (
-            <Link to="/add-room" className="nav-item">
-              + Добавить номер
-            </Link>
+            <>
+              <Link to="/add-room" className="nav-item">
+                + Добавить номер
+              </Link>
+              <Link
+                to="/admin"
+                className="nav-item"
+                style={{ color: '#d35400' }}
+              >
+                ⚙️ Админ панель
+              </Link>
+            </>
           )}
 
           {user ? (
             <div className="user-controls">
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginRight: '10px',
-                  gap: '5px',
-                }}
-              >
-                <span style={{ fontWeight: 'bold', color: '#333' }}>
-                  {user.username}
-                </span>
-                <span
-                  className={`user-badge role-${user.role}`}
-                  style={{ fontSize: '0.75rem', marginTop: '2px' }}
-                >
+              <div className="user-info">
+                <span className="user-name">{user.username}</span>
+                <span className={`user-badge role-${user.role}`}>
                   {getRoleName(user.role)}
                 </span>
               </div>

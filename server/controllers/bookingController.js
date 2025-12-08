@@ -8,12 +8,11 @@ exports.createBooking = async (req, res) => {
     const { roomId, checkInDate, checkOutDate, guestData, totalPrice } =
       req.body;
 
-    // Логика поиска или создания клиента
     let client;
+    // Логика поиска клиента по User ID
     if (req.user && req.user.id) {
       client = await Client.findOne({ user: req.user.id });
       if (client) {
-        // Обновляем данные, если нужно (упрощено)
         client.firstName = guestData.firstName;
         client.lastName = guestData.lastName;
         client.contactInfo = guestData.contactInfo;
@@ -27,8 +26,7 @@ exports.createBooking = async (req, res) => {
         await client.save();
       }
     } else {
-      // Если аноним, создаем клиента (здесь может быть ошибка дубликата паспорта, если не проверить)
-      // Для упрощения пока просто создаем или ищем по паспорту
+      // Логика для анонима / админа
       client = await Client.findOne({ passportData: guestData.passportData });
       if (!client) {
         client = new Client(guestData);
@@ -58,23 +56,59 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-// 2. Получение всех бронирований (Например, для админа или юзера)
+// 2. Получение бронирований текущего пользователя
 exports.getBookings = async (req, res) => {
   try {
-    let query = {};
+    // Ищем клиента, связанного с текущим юзером
+    const client = await Client.findOne({ user: req.user.id });
 
-    // Если это не админ, показываем только его бронирования
-    // (Потребуется сложнее логика: найти клиента по юзеру, потом брони по клиенту)
-    // Пока сделаем упрощенно: Админ видит всё
+    let query = {};
+    if (client) {
+      query.client = client._id;
+    } else {
+      // Если у юзера нет профиля клиента, то и броней нет
+      return res.json([]);
+    }
 
     const bookings = await Booking.find(query)
-      .populate('room', 'roomNumber price') // Подтянуть данные комнаты
-      .populate('client', 'firstName lastName contactInfo') // Подтянуть данные клиента
+      .populate('room', 'roomNumber price')
       .sort({ createdAt: -1 });
 
     res.json(bookings);
   } catch (err) {
     console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
+// --- НОВЫЕ МЕТОДЫ ДЛЯ АДМИНА (Именно их не хватало!) ---
+
+// 3. Получить ВСЕ бронирования (для админа)
+exports.getAllBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .populate('room', 'roomNumber price')
+      .populate('client')
+      .sort({ createdAt: -1 });
+
+    res.json(bookings);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
+// 4. Обновить статус бронирования
+exports.updateBookingStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+    res.json(booking);
+  } catch (err) {
     res.status(500).send('Server Error');
   }
 };
