@@ -2,14 +2,12 @@ const Booking = require('../models/Booking');
 const Client = require('../models/Client');
 const Room = require('../models/Room');
 
-// 1. Создание бронирования
 exports.createBooking = async (req, res) => {
   try {
     const { roomId, checkInDate, checkOutDate, guestData, totalPrice } =
       req.body;
 
     let client;
-    // Логика поиска клиента по User ID
     if (req.user && req.user.id) {
       client = await Client.findOne({ user: req.user.id });
       if (client) {
@@ -26,7 +24,6 @@ exports.createBooking = async (req, res) => {
         await client.save();
       }
     } else {
-      // Логика для анонима / админа
       client = await Client.findOne({ passportData: guestData.passportData });
       if (!client) {
         client = new Client(guestData);
@@ -56,17 +53,14 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-// 2. Получение бронирований текущего пользователя
 exports.getBookings = async (req, res) => {
   try {
-    // Ищем клиента, связанного с текущим юзером
     const client = await Client.findOne({ user: req.user.id });
 
     let query = {};
     if (client) {
       query.client = client._id;
     } else {
-      // Если у юзера нет профиля клиента, то и броней нет
       return res.json([]);
     }
 
@@ -81,9 +75,6 @@ exports.getBookings = async (req, res) => {
   }
 };
 
-// --- НОВЫЕ МЕТОДЫ ДЛЯ АДМИНА (Именно их не хватало!) ---
-
-// 3. Получить ВСЕ бронирования (для админа)
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()
@@ -98,7 +89,6 @@ exports.getAllBookings = async (req, res) => {
   }
 };
 
-// 4. Обновить статус бронирования
 exports.updateBookingStatus = async (req, res) => {
   try {
     const { status } = req.body;

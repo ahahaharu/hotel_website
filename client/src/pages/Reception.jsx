@@ -22,37 +22,30 @@ const Reception = () => {
     }
   };
 
-  // 2. onRoomAssign
   const handleRoomAssign = (roomNumber, guestName) => {
     addLog(`📝 НАЗНАЧЕНИЕ: Комната ${roomNumber} закреплена за ${guestName}`);
   };
 
-  // 3. onCheckIn
   const handleCheckIn = (guestName) => {
     addLog(`🏃 ЗАЕЗД: Гость ${guestName} получил ключи и заселился.`);
   };
 
-  // 4. onCheckOut
   const handleCheckOut = () => {
     addLog(`🏁 ВЫЕЗД: Гость сдал ключи и выехал.`);
   };
 
-  // 5. onServiceRequest
   const handleServiceRequest = (id, name) => {
     addLog(`🛎️ УСЛУГА: Заказано "${name}" (ID: ${id})`);
   };
 
-  // 6. onCleaningSchedule
   const handleCleaningSchedule = (time) => {
     addLog(`🧹 УБОРКА: Запрос на клининг отправлен в ${time}`);
   };
 
-  // 7. onGuestFeedback
   const handleGuestFeedback = (text) => {
     addLog(`💬 ОТЗЫВ: "${text}"`);
   };
 
-  // Данные для RoomAllocation (пропсы)
   const availableRooms = [
     { id: 101, number: '101', type: 'Стандарт' },
     { id: 102, number: '102', type: 'Люкс' },
@@ -64,13 +57,11 @@ const Reception = () => {
       <h1 className="text-center mb-4">🖥️ Панель Администратора (Reception)</h1>
 
       <div className="reception-grid">
-        {/* Компонент 1: Функциональный */}
         <FaceCheckIn
           onFaceScan={handleFaceScanResult}
           defaultStatus="Ожидание"
         />
 
-        {/* Компонент 2: Классовый */}
         <RoomAllocation
           rooms={availableRooms}
           onRoomAssign={handleRoomAssign}
@@ -78,7 +69,6 @@ const Reception = () => {
           onCheckOut={handleCheckOut}
         />
 
-        {/* Компонент 3: Стрелочная функция */}
         <ServiceManager
           onServiceRequest={handleServiceRequest}
           onCleaningSchedule={handleCleaningSchedule}
@@ -86,7 +76,6 @@ const Reception = () => {
         />
       </div>
 
-      {/* Лог действий (Console output) */}
       <div className="logs-panel">
         <h4>📜 Журнал операций</h4>
         <div className="logs-list">

@@ -5,7 +5,6 @@ const User = require('../models/User');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Вспомогательная функция для создания токена
 const generateToken = (user) => {
   return jwt.sign(
     { user: { id: user.id, role: user.role } },
@@ -14,12 +13,10 @@ const generateToken = (user) => {
   );
 };
 
-// --- ОБЫЧНАЯ РЕГИСТРАЦИЯ (Email + Password) ---
 exports.registerUser = async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
-    // Валидация: при обычной регистрации пароль ОБЯЗАТЕЛЕН
     if (!password) {
       return res
         .status(400)
@@ -53,9 +50,8 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// --- ОБЫЧНЫЙ ВХОД ---
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body; // Теперь ждем email, а не username
+  const { email, password } = req.body;
 
   try {
     let user = await User.findOne({ email });
@@ -63,7 +59,6 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ msg: 'Неверный email или пароль' });
     }
 
-    // Если пользователь регался через Google, у него нет пароля
     if (!user.password) {
       return res.status(400).json({ msg: 'Пожалуйста, войдите через Google' });
     }
@@ -81,7 +76,6 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// --- ВХОД ЧЕРЕЗ GOOGLE (Найти или Создать) ---
 exports.googleAuth = async (req, res) => {
   const { token } = req.body;
 
@@ -91,28 +85,22 @@ exports.googleAuth = async (req, res) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const { email, name, sub } = ticket.getPayload(); // sub - это Google ID
-
-    // 1. Ищем пользователя по email
+    const { email, name, sub } = ticket.getPayload();
     let user = await User.findOne({ email });
 
     if (user) {
-      // Пользователь есть -> просто логиним его
-      // (Можно добавить обновление googleId, если его не было)
       if (!user.googleId) {
         user.googleId = sub;
-        user.authProvider = 'google'; // Или смешанный тип
+        user.authProvider = 'google';
         await user.save();
       }
     } else {
-      // Пользователя нет -> СОЗДАЕМ нового (Без пароля!)
       user = new User({
-        username: name, // Берем имя из Google (например, "Ivan Ivanov")
+        username: name,
         email: email,
         googleId: sub,
         role: 'guest',
         authProvider: 'google',
-        // password мы НЕ ставим, он останется undefined
       });
       await user.save();
     }

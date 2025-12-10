@@ -111,7 +111,6 @@ exports.deleteRoom = async (req, res) => {
     const room = await Room.findById(req.params.id);
     if (!room) return res.status(404).json({ msg: 'Номер не найден' });
 
-    // Удаляем файл перед удалением записи
     if (room.photo) {
       const filePath = path.join(__dirname, '..', 'uploads', room.photo);
       fs.unlink(filePath, (err) => {

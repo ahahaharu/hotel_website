@@ -7,14 +7,11 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Состояние для часов
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Определяем таймзону один раз при загрузке
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   useEffect(() => {
-    // Тикаем каждую секунду
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -38,7 +35,6 @@ const Navbar = () => {
     }
   };
 
-  // Форматирование времени (HH:mm)
   const formatTime = (date) => {
     return new Intl.DateTimeFormat('ru-RU', {
       hour: '2-digit',
@@ -46,7 +42,6 @@ const Navbar = () => {
     }).format(date);
   };
 
-  // Форматирование даты (DD.MM.YYYY)
   const formatDate = (date) => {
     return new Intl.DateTimeFormat('ru-RU', {
       day: '2-digit',

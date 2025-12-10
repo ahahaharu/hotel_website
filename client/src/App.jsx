@@ -18,6 +18,7 @@ import Contacts from './pages/Contacts';
 import Reviews from './pages/Reviews';
 import Home from './pages/Home';
 import Reception from './pages/Reception';
+import ChatBot from './components/ChatBot';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             />
           </Routes>
         </div>
+        <ChatBot />
       </Router>
     </AuthProvider>
   );

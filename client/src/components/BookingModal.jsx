@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import api from '../api/axiosConfig';
-import { AuthContext } from '../context/AuthContext'; // Импортируем контекст
+import { AuthContext } from '../context/AuthContext';
 import './BookingModal.css';
 
 const BookingModal = ({ room, onClose }) => {
-  const { user } = useContext(AuthContext); // Получаем текущего юзера
+  const { user } = useContext(AuthContext);
 
   const [dates, setDates] = useState({
     checkIn: '',
@@ -14,7 +14,6 @@ const BookingModal = ({ room, onClose }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [daysCount, setDaysCount] = useState(0);
 
-  // Добавили passportData, так как он обязателен в модели Client
   const [guest, setGuest] = useState({
     firstName: '',
     lastName: '',
@@ -22,7 +21,6 @@ const BookingModal = ({ room, onClose }) => {
     passportData: '',
   });
 
-  // Эффект для подсчета цены
   useEffect(() => {
     if (dates.checkIn && dates.checkOut) {
       const start = new Date(dates.checkIn);
@@ -39,10 +37,6 @@ const BookingModal = ({ room, onClose }) => {
       }
     }
   }, [dates, room.price]);
-
-  // (Опционально) Эффект для подгрузки данных, если клиент уже бронировал ранее
-  // Для этого нужен отдельный эндпоинт типа GET /api/clients/me
-  // Пока пропустим для простоты, пользователь введет руками.
 
   const handleChange = (e) => {
     setDates({ ...dates, [e.target.name]: e.target.value });
@@ -61,13 +55,12 @@ const BookingModal = ({ room, onClose }) => {
     }
 
     try {
-      // Отправляем запрос. Токен (x-auth-token) уйдет автоматически через axiosConfig
       await api.post('/bookings', {
-        roomId: room._id, // Важно: используем _id для Mongo
+        roomId: room._id,
         checkInDate: dates.checkIn,
         checkOutDate: dates.checkOut,
-        guestData: guest, // Передаем объект с данными гостя
-        totalPrice: totalPrice, // Можно передать цену, но лучше считать на сервере
+        guestData: guest,
+        totalPrice: totalPrice,
       });
 
       alert(`Бронирование успешно! К оплате: ${totalPrice} ₽`);
@@ -89,7 +82,6 @@ const BookingModal = ({ room, onClose }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Даты */}
           <div className="form-row">
             <div className="form-group">
               <label>Дата заезда</label>
@@ -111,7 +103,6 @@ const BookingModal = ({ room, onClose }) => {
             </div>
           </div>
 
-          {/* Расчет цены */}
           <div
             className="price-calculation"
             style={{
@@ -179,7 +170,6 @@ const BookingModal = ({ room, onClose }) => {
             />
           </div>
 
-          {/* ВАЖНОЕ НОВОЕ ПОЛЕ */}
           <div className="form-group">
             <label>Паспортные данные</label>
             <input

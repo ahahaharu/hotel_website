@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom'; // <--- Добавьте этот импорт
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api/axiosConfig';
 import './Reviews.css';
 
 const Reviews = () => {
-  const { user } = useContext(AuthContext); // user будет null, если не вошли
+  const { user } = useContext(AuthContext);
   const [reviews, setReviews] = useState([]);
 
   const [formData, setFormData] = useState({ rating: 5, text: '' });
@@ -32,13 +32,11 @@ const Reviews = () => {
     setErrorMessage('');
 
     const xhr = new XMLHttpRequest();
-    // Убедитесь, что URL правильный
     const url = 'http://localhost:5000/api/reviews';
 
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
-    // Получаем токен. Если его нет, xhr отправится без него (но сервер должен вернуть ошибку)
     const token = localStorage.getItem('token');
     if (token) xhr.setRequestHeader('x-auth-token', token);
 
@@ -58,7 +56,6 @@ const Reviews = () => {
         setTimeout(() => setStatus('idle'), 3000);
       } else {
         setStatus('error');
-        // Если пользователь не авторизован, сервер вернет 401
         if (xhr.status === 401) {
           setErrorMessage('Ошибка: Вы не авторизованы.');
         } else {
@@ -72,8 +69,6 @@ const Reviews = () => {
       setErrorMessage('Ошибка сети. Проверьте подключение.');
     };
 
-    // Подготовка данных.
-    // Username берем из контекста, но сервер лучше пусть берет его из токена для безопасности.
     const payload = JSON.stringify({
       username: user ? user.username : 'Anonymous',
       rating: formData.rating,
@@ -97,9 +92,7 @@ const Reviews = () => {
     <div className="container reviews-page">
       <h1>Отзывы наших гостей</h1>
 
-      {/* --- ЛОГИКА ОТОБРАЖЕНИЯ ФОРМЫ --- */}
       {user ? (
-        // ЕСЛИ ПОЛЬЗОВАТЕЛЬ АВТОРИЗОВАН -> ПОКАЗЫВАЕМ ФОРМУ
         <div className="review-form-card">
           <h3>Оставить отзыв</h3>
           <p style={{ marginBottom: '15px', color: '#666' }}>
@@ -178,7 +171,6 @@ const Reviews = () => {
           </form>
         </div>
       ) : (
-        // ЕСЛИ ГОСТЬ -> ПОКАЗЫВАЕМ ПРЕДЛОЖЕНИЕ ВОЙТИ
         <div
           className="review-form-card"
           style={{ textAlign: 'center', padding: '40px' }}
@@ -210,7 +202,6 @@ const Reviews = () => {
         </div>
       )}
 
-      {/* Список отзывов (виден всем) */}
       <div className="reviews-list">
         {reviews.map((rev) => (
           <div key={rev._id} className="review-item">

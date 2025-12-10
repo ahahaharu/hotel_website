@@ -1,32 +1,28 @@
 import React, { Component } from 'react';
-import api from '../../api/axiosConfig'; // Импортируем наш настроенный axios
-import './Reception.css'; // Предполагаем, что стили там
+import api from '../../api/axiosConfig';
+import './Reception.css';
 
 class RoomAllocation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rooms: [], // Список загруженных комнат
+      rooms: [],
       loading: true,
-
-      // Данные формы (соответствуют модели Client)
       selectedRoomId: '',
       firstName: '',
       lastName: '',
       middleName: '',
       passportData: '',
       contactInfo: '',
-      checkOutDate: '', // Нужно знать, до какого числа заселяем
+      checkOutDate: '',
 
       isCheckedIn: false,
-      currentBookingId: null, // Чтобы знать ID созданной брони
+      currentBookingId: null,
     };
   }
 
-  // 1. Загружаем комнаты при монтировании компонента
   async componentDidMount() {
     try {
-      // Загружаем только свободные или все номера (зависит от логики, берем все)
       const response = await api.get('/rooms');
       this.setState({ rooms: response.data, loading: false });
     } catch (error) {
@@ -36,13 +32,11 @@ class RoomAllocation extends Component {
     }
   }
 
-  // Универсальный обработчик ввода
   handleInputChange = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
 
-  // 2. Основная логика заселения (Создание брони и клиента)
   handleCheckIn = async () => {
     const {
       selectedRoomId,
@@ -54,7 +48,6 @@ class RoomAllocation extends Component {
       checkOutDate,
     } = this.state;
 
-    // Простая валидация
     if (
       !selectedRoomId ||
       !firstName ||
@@ -67,12 +60,9 @@ class RoomAllocation extends Component {
     }
 
     try {
-      // Формируем данные для отправки на сервер
-      // Используем тот самый эндпоинт POST /api/bookings, который мы делали ранее.
-      // Он умеет сам создавать клиента, если передать guestData.
       const bookingData = {
         roomId: selectedRoomId,
-        checkInDate: new Date(), // Заселяем "сейчас"
+        checkInDate: new Date(),
         checkOutDate: checkOutDate,
         guestData: {
           firstName,
@@ -85,13 +75,11 @@ class RoomAllocation extends Component {
 
       const response = await api.post('/bookings', bookingData);
 
-      // Успех
       this.setState({
         isCheckedIn: true,
         currentBookingId: response.data._id,
       });
 
-      // Вызываем пропс родителя, чтобы обновить логи
       this.props.onCheckIn(`${lastName} ${firstName}`);
       alert('Гость успешно заселен!');
     } catch (error) {
@@ -101,11 +89,7 @@ class RoomAllocation extends Component {
     }
   };
 
-  // Выселение (просто сброс формы или запрос на сервер для смены статуса)
   handleCheckOut = () => {
-    // Если нужно, можно отправить запрос на сервер для обновления статуса брони на 'Выехал'
-    // await api.put(`/bookings/${this.state.currentBookingId}/status`, { status: 'Выехал' });
-
     this.setState({
       isCheckedIn: false,
       selectedRoomId: '',
@@ -134,7 +118,6 @@ class RoomAllocation extends Component {
       checkOutDate,
     } = this.state;
 
-    // Находим номер комнаты для отображения при успехе
     const roomNumberDisplay =
       rooms.find((r) => r._id === selectedRoomId)?.roomNumber || '';
 
@@ -146,7 +129,6 @@ class RoomAllocation extends Component {
           <p>Загрузка списка комнат...</p>
         ) : !isCheckedIn ? (
           <div className="allocation-form">
-            {/* Группа полей: Данные клиента */}
             <h4
               style={{
                 fontSize: '0.9rem',
@@ -209,7 +191,6 @@ class RoomAllocation extends Component {
               />
             </div>
 
-            {/* Группа полей: Заселение */}
             <h4
               style={{
                 fontSize: '0.9rem',

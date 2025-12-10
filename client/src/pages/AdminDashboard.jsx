@@ -23,7 +23,6 @@ const AdminDashboard = () => {
         >
           Пользователи
         </button>
-        {/* Можно добавить вкладку 'rooms' если нужно */}
       </div>
 
       <div className="admin-content">

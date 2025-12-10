@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-// Компонент объявлен как стрелочная функция
 const ServiceManager = ({
   onServiceRequest,
   onCleaningSchedule,
@@ -81,7 +80,6 @@ const ServiceManager = ({
   );
 };
 
-// Значения props по умолчанию
 ServiceManager.defaultProps = {
   onServiceRequest: () => console.log('Service requested'),
 };

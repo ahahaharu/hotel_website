@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axiosConfig';
 
 const RoomDetails = () => {
-  const { id } = useParams(); // Получаем ID из URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -74,12 +74,9 @@ const RoomDetails = () => {
             <strong>Вместимость:</strong> {room.capacity} чел.
           </div>
 
-          {/* Здесь можно добавить список удобств, если мы добавили их в модель */}
-
           <button
             className="btn btn-primary btn-lg"
             style={{ marginTop: '30px' }}
-            // Здесь можно открыть модалку бронирования или перекинуть на страницу брони
             onClick={() =>
               alert(
                 'Для бронирования вернитесь в каталог и нажмите "Забронировать" (или реализуем логику тут)'

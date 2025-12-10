@@ -19,6 +19,7 @@ app.use('/api/rooms', require('./routes/roomRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
+app.use('/api/chat', require('./routes/chatRoutes'));
 
 const connectDB = async () => {
   try {

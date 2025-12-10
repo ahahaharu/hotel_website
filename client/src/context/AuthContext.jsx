@@ -7,29 +7,27 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 1. При загрузке страницы достаем и имя тоже
   useEffect(() => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
-    const username = localStorage.getItem('username'); // <--- Достаем имя
+    const username = localStorage.getItem('username');
 
     if (token) {
-      setUser({ role, username }); // <--- Сохраняем в стейт
+      setUser({ role, username });
       api.defaults.headers.common['x-auth-token'] = token;
     }
     setLoading(false);
   }, []);
 
-  // 2. Обновляем функцию LOGIN
   const login = async (email, password) => {
     try {
       const res = await api.post('/auth/login', { email, password });
 
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
-      localStorage.setItem('username', res.data.username); // <--- Сохраняем имя
+      localStorage.setItem('username', res.data.username);
 
-      setUser({ role: res.data.role, username: res.data.username }); // <--- В стейт
+      setUser({ role: res.data.role, username: res.data.username });
       api.defaults.headers.common['x-auth-token'] = res.data.token;
 
       return { success: true };
@@ -38,7 +36,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 3. Обновляем функцию REGISTER
   const register = async (username, email, password) => {
     try {
       const res = await api.post('/auth/register', {
@@ -49,9 +46,9 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
-      localStorage.setItem('username', res.data.username); // <--- Сохраняем имя
+      localStorage.setItem('username', res.data.username);
 
-      setUser({ role: res.data.role, username: res.data.username }); // <--- В стейт
+      setUser({ role: res.data.role, username: res.data.username });
       api.defaults.headers.common['x-auth-token'] = res.data.token;
 
       return { success: true };
@@ -63,16 +60,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 4. Обновляем функцию GOOGLE LOGIN
   const googleLogin = async (token) => {
     try {
       const res = await api.post('/auth/google', { token });
 
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
-      localStorage.setItem('username', res.data.username); // <--- Сохраняем имя
+      localStorage.setItem('username', res.data.username);
 
-      setUser({ role: res.data.role, username: res.data.username }); // <--- В стейт
+      setUser({ role: res.data.role, username: res.data.username });
       api.defaults.headers.common['x-auth-token'] = res.data.token;
 
       return { success: true };
@@ -82,11 +78,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 5. Обновляем LOGOUT
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    localStorage.removeItem('username'); // <--- Удаляем имя
+    localStorage.removeItem('username');
     setUser(null);
     delete api.defaults.headers.common['x-auth-token'];
   };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/axiosConfig';
-import DateCell from '../DateCell'; // Используем наш компонент для дат
+import DateCell from '../DateCell';
 
 const AdminBookingsTable = () => {
   const [bookings, setBookings] = useState([]);
@@ -24,7 +24,6 @@ const AdminBookingsTable = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       await api.put(`/bookings/${id}/status`, { status: newStatus });
-      // Обновляем локально
       setBookings(
         bookings.map((b) => (b._id === id ? { ...b, status: newStatus } : b))
       );
@@ -36,13 +35,13 @@ const AdminBookingsTable = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Забронировано':
-        return '#f39c12'; // Оранжевый
+        return '#f39c12';
       case 'Заселен':
-        return '#27ae60'; // Зеленый
+        return '#27ae60';
       case 'Выехал':
-        return '#7f8c8d'; // Серый
+        return '#7f8c8d';
       case 'Отменено':
-        return '#c0392b'; // Красный
+        return '#c0392b';
       default:
         return '#333';
     }

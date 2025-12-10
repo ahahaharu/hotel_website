@@ -41,14 +41,12 @@
   color: #007bff;
 }
 
-/* Группа кнопок авторизации */
 .auth-buttons {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-/* Контролы пользователя (бйдж + выход) */
 .user-controls {
   display: flex;
   align-items: center;

@@ -6,8 +6,8 @@ import { GoogleLogin } from '@react-oauth/google';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    username: '', // Это будет отображаемое имя (Иван)
-    email: '', // Это будет логин
+    username: '',
+    email: '',
     password: '',
     confirmPassword: '',
   });
@@ -36,7 +36,6 @@ const Register = () => {
       return;
     }
 
-    // Передаем username, email, password
     const result = await register(username, email, password);
 
     if (result.success) {
@@ -46,7 +45,6 @@ const Register = () => {
     }
   };
 
-  // Добавляем Google и сюда тоже, чтобы можно было сразу зарегаться через него
   const handleGoogleSuccess = async (credentialResponse) => {
     if (credentialResponse.credential) {
       const result = await googleLogin(credentialResponse.credential);
@@ -130,7 +128,7 @@ const Register = () => {
             onError={() => setError('Ошибка регистрации через Google')}
             size="large"
             width="300"
-            text="signup_with" // Текст кнопки изменится на "Sign up with Google"
+            text="signup_with"
             shape="rectangular"
           />
         </div>

@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import './Reception.css'; // Общий CSS создадим позже
+import './Reception.css';
 
-// Декларативная функция
 function FaceCheckIn({ onFaceScan, defaultStatus = 'Ожидание' }) {
   const [scanStatus, setScanStatus] = useState(defaultStatus);
   const [attempts, setAttempts] = useState(0);
@@ -19,18 +18,15 @@ function FaceCheckIn({ onFaceScan, defaultStatus = 'Ожидание' }) {
     }
   }, [scanStatus]);
 
-  // Обработчик 1: Сканирование лица
   const handleScanClick = () => {
     setScanStatus('Сканирование...');
     setAttempts((prev) => prev + 1);
 
-    // Имитация задержки сканирования
     setTimeout(() => {
-      const isSuccess = Math.random() > 0.3; // 70% успех
+      const isSuccess = Math.random() > 0.3;
 
       if (isSuccess) {
         setScanStatus('Успешно');
-        // Передача параметров в родительский обработчик
         onFaceScan({ success: true, guestName: 'Иван Иванов', confidence: 98 });
       } else {
         setScanStatus('Ошибка');

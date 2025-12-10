@@ -9,18 +9,16 @@ const Catalog = () => {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Состояния для фильтров и сортировки
-  const [filter, setFilter] = useState('All'); // Категория (backend)
-  const [searchTerm, setSearchTerm] = useState(''); // Поиск (frontend)
-  const [sortType, setSortType] = useState('default'); // Сортировка (frontend)
+  const [filter, setFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortType, setSortType] = useState('default');
 
   const [selectedRoom, setSelectedRoom] = useState(null);
   const { user } = useContext(AuthContext);
 
-  // 1. Загрузка данных (Фильтр по категории делаем на сервере, как и было)
   useEffect(() => {
     const fetchRooms = async () => {
-      setLoading(true); // Важно включать лоадер при смене фильтра
+      setLoading(true);
       try {
         const query = filter !== 'All' ? `?comfort=${filter}` : '';
         const response = await api.get(`/rooms${query}`);
@@ -55,19 +53,15 @@ const Catalog = () => {
     setSelectedRoom(room);
   };
 
-  // --- ЛОГИКА ПОИСКА И СОРТИРОВКИ (Frontend) ---
   const getDisplayedRooms = () => {
-    // Создаем копию массива, чтобы не мутировать стейт напрямую при сортировке
     let result = [...rooms];
 
-    // 1. Поиск по номеру комнаты
     if (searchTerm) {
       result = result.filter((room) =>
         room.roomNumber.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // 2. Сортировка
     if (sortType === 'priceAsc') {
       result.sort((a, b) => a.price - b.price);
     } else if (sortType === 'priceDesc') {
@@ -99,7 +93,6 @@ const Catalog = () => {
           </button>
         )}
 
-        {/* ПАНЕЛЬ УПРАВЛЕНИЯ (Поиск, Фильтр, Сортировка) */}
         <div
           className="filter-panel"
           style={{
@@ -110,7 +103,6 @@ const Catalog = () => {
             alignItems: 'center',
           }}
         >
-          {/* Поиск */}
           <div className="filter-group">
             <input
               type="text"
@@ -121,7 +113,6 @@ const Catalog = () => {
             />
           </div>
 
-          {/* Фильтр по категории */}
           <div className="filter-group">
             <select
               value={filter}
@@ -135,7 +126,6 @@ const Catalog = () => {
             </select>
           </div>
 
-          {/* Сортировка */}
           <div className="filter-group">
             <select
               value={sortType}

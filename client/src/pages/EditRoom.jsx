@@ -7,7 +7,7 @@ const EditRoom = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [image, setImage] = useState(null); // Новый файл
+  const [image, setImage] = useState(null);
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState('');
 
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ const EditRoom = () => {
           price: response.data.price,
           description: response.data.description,
         });
-        setCurrentPhotoUrl(response.data.photoUrl); // Сохраняем текущее фото
+        setCurrentPhotoUrl(response.data.photoUrl);
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -61,7 +61,6 @@ const EditRoom = () => {
     }
 
     try {
-      // ИСПРАВЛЕНИЕ: Добавлен объект с заголовками
       await api.put(`/rooms/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',

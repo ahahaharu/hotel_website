@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom'; // Импорт Link
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './RoomCard.css';
 
@@ -20,7 +20,6 @@ const RoomCard = ({ room, onBook, onDelete }) => {
         <p className="room-capacity">👥 {room.capacity} чел.</p>
 
         <div className="room-actions">
-          {/* Ссылка на детальную страницу */}
           <Link
             to={`/rooms/${room._id}`}
             className="btn btn-secondary"

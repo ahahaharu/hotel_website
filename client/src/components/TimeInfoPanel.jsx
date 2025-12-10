@@ -6,7 +6,6 @@ const TimeInfoPanel = () => {
   const userTimezone = getUserTimezone();
 
   useEffect(() => {
-    // Обновляем часы каждую секунду
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
