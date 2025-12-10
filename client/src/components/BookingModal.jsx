@@ -13,6 +13,7 @@ const BookingModal = ({ room, onClose }) => {
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [daysCount, setDaysCount] = useState(0);
+  const [status, setStatus] = useState('idle'); // idle, processing, success, error
 
   const [guest, setGuest] = useState({
     firstName: '',
@@ -21,6 +22,7 @@ const BookingModal = ({ room, onClose }) => {
     passportData: '',
   });
 
+  // Расчет цены и дней
   useEffect(() => {
     if (dates.checkIn && dates.checkOut) {
       const start = new Date(dates.checkIn);
@@ -46,7 +48,24 @@ const BookingModal = ({ room, onClose }) => {
     setGuest({ ...guest, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  // --- ШАГ 1: Промис проверки доступности ---
+  const checkAvailability = (roomId, start, end) => {
+    // Возвращаем промис запроса
+    return api.post('/bookings/check', {
+      roomId: roomId,
+      checkInDate: start,
+      checkOutDate: end,
+    });
+  };
+  const sendConfirmation = (bookingId) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(`Бронь #${bookingId.slice(-6).toUpperCase()} подтверждена.`);
+      }, 500);
+    });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (daysCount <= 0) {
@@ -54,21 +73,45 @@ const BookingModal = ({ room, onClose }) => {
       return;
     }
 
-    try {
-      await api.post('/bookings', {
-        roomId: room._id,
-        checkInDate: dates.checkIn,
-        checkOutDate: dates.checkOut,
-        guestData: guest,
-        totalPrice: totalPrice,
-      });
+    setStatus('processing');
 
-      alert(`Бронирование успешно! К оплате: ${totalPrice} ₽`);
-      onClose();
-    } catch (error) {
-      console.error(error);
-      alert('Ошибка: ' + (error.response?.data?.msg || error.message));
-    }
+    checkAvailability(room._id, dates.checkIn, dates.checkOut)
+      .then(() => {
+        console.log('1. Номер свободен. Создаем бронь...');
+
+        const bookingPayload = {
+          roomId: room._id,
+          checkInDate: dates.checkIn,
+          checkOutDate: dates.checkOut,
+          guestData: guest,
+          totalPrice: totalPrice,
+        };
+
+        return api.post('/bookings', bookingPayload);
+      })
+      .then((response) => {
+        const newBooking = response.data;
+        console.log('2. Бронь создана в БД:', newBooking._id);
+        return sendConfirmation(newBooking._id);
+      })
+      .then((confirmationMessage) => {
+        console.log('Финал:', confirmationMessage);
+        setStatus('success');
+        alert(`Успешно! ${confirmationMessage}`);
+        onClose();
+      })
+      .catch((error) => {
+        console.error('Сбой в цепочке:', error);
+        setStatus('error');
+
+        const msg = error.response?.data?.msg || error.message;
+
+        if (msg && msg.includes('занят')) {
+          alert('❌ Ошибка: На выбранные даты этот номер уже занят!');
+        } else {
+          alert(`Ошибка бронирования: ${msg}`);
+        }
+      });
   };
 
   return (
@@ -115,7 +158,7 @@ const BookingModal = ({ room, onClose }) => {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Цена за сутки:</span>
-              <strong>{room.price} ₽</strong>
+              <strong>{room.price} BYN</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Ночей:</span>
@@ -133,7 +176,7 @@ const BookingModal = ({ room, onClose }) => {
               }}
             >
               <span>Итого:</span>
-              <strong>{totalPrice} ₽</strong>
+              <strong>{totalPrice} BYN</strong>
             </div>
           </div>
 
@@ -166,7 +209,7 @@ const BookingModal = ({ room, onClose }) => {
               name="contactInfo"
               required
               onChange={handleGuestChange}
-              placeholder="+7..."
+              placeholder="+375..."
             />
           </div>
 
@@ -187,8 +230,9 @@ const BookingModal = ({ room, onClose }) => {
             type="submit"
             className="btn btn-primary btn-block"
             style={{ marginTop: '20px' }}
+            disabled={status === 'processing'}
           >
-            Подтвердить бронь
+            {status === 'processing' ? 'Обработка...' : 'Подтвердить бронь'}
           </button>
         </form>
       </div>

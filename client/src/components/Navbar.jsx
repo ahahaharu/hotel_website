@@ -78,17 +78,23 @@ const Navbar = () => {
             Контакты
           </Link>
 
+          {user && (
+            <Link to="/my-bookings" className="nav-item">
+              Мои брони
+            </Link>
+          )}
+
           {user && user.role === 'admin' && (
             <>
               <Link to="/reception" className="nav-item">
-                🛎️ Стойка регистрации
+                Стойка регистрации
               </Link>
               <Link
                 to="/admin"
                 className="nav-item"
                 style={{ color: '#d35400' }}
               >
-                ⚙️ Админ панель
+                Админ панель
               </Link>
             </>
           )}

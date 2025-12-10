@@ -85,7 +85,7 @@ const AdminBookingsTable = () => {
                   Выезд: <DateCell isoDate={booking.checkOutDate} />
                 </small>
               </td>
-              <td>{booking.totalPrice} ₽</td>
+              <td>{booking.totalPrice} BYN</td>
               <td>
                 <span
                   style={{

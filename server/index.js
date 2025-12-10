@@ -4,6 +4,8 @@ const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
 
+const startRoomStatusUpdater = require('./utils/roomScheduler');
+
 const app = express();
 app.use(express.json());
 app.use(
@@ -25,6 +27,8 @@ const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ MongoDB подключена успешно (Local)');
+    startRoomStatusUpdater();
+    console.log('⏱️ Система авто-выселения запущена (интервал 30 сек)');
   } catch (err) {
     console.error('❌ Ошибка подключения:', err.message);
     process.exit(1);

@@ -22,7 +22,7 @@ const BookingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Забронировано', 'Заселен', 'Выехал', 'Отменено'],
+      enum: ['Забронировано', 'Заселён', 'Выехал', 'Отменено'],
       default: 'Забронировано',
     },
     totalPrice: {

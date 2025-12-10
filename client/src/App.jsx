@@ -19,6 +19,7 @@ import Reviews from './pages/Reviews';
 import Home from './pages/Home';
 import Reception from './pages/Reception';
 import ChatBot from './components/ChatBot';
+import MyBookings from './pages/MyBookings';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route path="/add-room" element={<AddRoom />} />
             <Route path="/edit-room/:id" element={<EditRoom />} />
             <Route path="/reception" element={<Reception />} />
+            <Route path="/my-bookings" element={<MyBookings />} />
             <Route
               path="/admin"
               element={

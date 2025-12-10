@@ -63,7 +63,7 @@ const RoomDetails = () => {
           </span>
 
           <h3 style={{ marginTop: '20px', color: '#27ae60' }}>
-            {room.price} ₽ / ночь
+            {room.price} BYN / ночь
           </h3>
 
           <p style={{ marginTop: '20px', lineHeight: '1.6', color: '#555' }}>

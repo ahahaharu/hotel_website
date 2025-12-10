@@ -129,7 +129,7 @@ const EditRoom = () => {
           </div>
 
           <div className="form-group">
-            <label>Цена (₽)</label>
+            <label>Цена (BYN)</label>
             <input
               type="number"
               name="price"

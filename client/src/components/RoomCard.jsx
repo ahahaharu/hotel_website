@@ -16,7 +16,7 @@ const RoomCard = ({ room, onBook, onDelete }) => {
       <div className="room-info">
         <h3>Комната {room.roomNumber}</h3>
         <p className="room-type">{room.comfortLevel}</p>
-        <p className="room-price">{room.price} ₽ / ночь</p>
+        <p className="room-price">{room.price} BYN / ночь</p>
         <p className="room-capacity">👥 {room.capacity} чел.</p>
 
         <div className="room-actions">

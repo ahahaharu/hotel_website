@@ -187,7 +187,7 @@ class RoomAllocation extends Component {
                 name="contactInfo"
                 value={contactInfo}
                 onChange={this.handleInputChange}
-                placeholder="+7..."
+                placeholder="+375..."
               />
             </div>
 
@@ -212,7 +212,7 @@ class RoomAllocation extends Component {
                 <option value="">-- Список номеров --</option>
                 {rooms.map((room) => (
                   <option key={room._id} value={room._id}>
-                    № {room.roomNumber} — {room.comfortLevel} ({room.price}₽)
+                    № {room.roomNumber} — {room.comfortLevel} ({room.price} BYN)
                   </option>
                 ))}
               </select>
